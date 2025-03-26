@@ -8,6 +8,8 @@ const userSchema = new mongoose.Schema({
   nombre: { type: String },
   apellidos: { type: String },
   telefono: { type: String },
+  dni: { type: String },
+  fechaNacimiento: { type: Date },
   avatar: { type: String },
   conversaciones: { type: Array, default: [] },
   createdAt: { type: Date, default: Date.now }
