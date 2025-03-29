@@ -6,9 +6,10 @@ const messageSchema = new mongoose.Schema({
   content: { type: String, required: true },
 });
 
-// Cada sesión tiene un ID único y un array de mensajes
+// Cada sesión tiene un ID único, un userId opcional, y un array de mensajes
 const sessionSchema = new mongoose.Schema({
   sessionId: { type: String, required: true, unique: true },
+  userId: { type: String, required: false }, // Asociar la sesión al usuario de Google
   messages: [messageSchema],
 }, { timestamps: true });
 
