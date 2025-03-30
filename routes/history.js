@@ -21,22 +21,4 @@ router.get('/:sessionId', async (req, res) => {
   }
 });
 
-
-const handleNewChat = () => {
-    const newId = chats.length + 1;
-    const newSessionId = Date.now().toString(); // Nuevo sessionId
-    localStorage.setItem('sessionId', newSessionId); // Guardar como activo
-  
-    const newChat: Chat = {
-      id: newId,
-      name: `Asistente ${newId}`,
-      messages: ['🤖 Asistente: Hola, soy tu nuevo asistente. ¿Qué necesitas?'],
-      sessionId: newSessionId, // 👈 añadir esto si lo manejas en frontend
-    };
-  
-    setChats([newChat, ...chats]);
-    setActiveChatId(newId);
-    setIsMobileChatOpen(true);
-  };
-  
 export default router;
