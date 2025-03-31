@@ -25,10 +25,19 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: allowedOrigins,
-    credentials: true, // si usas cookies o sesiones
+    origin: function (origin, callback) {
+      // Permitir peticiones sin origin (como desde herramientas backend o curl)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.warn("❌ Origen bloqueado por CORS:", origin);
+        callback(new Error("CORS not allowed from this origin"));
+      }
+    },
+    credentials: true,
   })
 );
+
 
 
 // 🆕 rutas
