@@ -20,14 +20,19 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
+app.use((req, res, next) => {
+  console.log(`🛬 [${req.method}] ${req.originalUrl}`);
+  next();
+});
+
 
 // ✅ Middleware para preflight OPTIONS + headers básicos CORS
 app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
+  if (req.method === "OPTIONS") {
+    console.log("⚙️ Preflight OPTIONS recibido en:", req.originalUrl);
   }
 
+  res.setHeader("Access-Control-Allow-Origin", "https://correduria-gabn.vercel.app");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -38,6 +43,7 @@ app.use((req, res, next) => {
 
   next();
 });
+
 
 // ✅ Solo se mantiene UN cors() real (para la verificación formal)
 app.use(
@@ -53,6 +59,8 @@ app.use(
     credentials: true,
   })
 );
+// ✅ Fallback global para OPTIONS que Render ignora a veces
+app.options("*", cors());
 
 // ✅ Rutas
 app.use("/api/auth", authRoutes);
