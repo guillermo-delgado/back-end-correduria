@@ -23,6 +23,20 @@ dotenv.config(); // 👈 justo después
 const app = express();
 
 app.use(express.json());
+// ✅ Middleware global para responder a preflight OPTIONS desde cualquier ruta
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://correduria-gabn.vercel.app");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
+
 app.use(
   cors({
     origin: function (origin, callback) {
