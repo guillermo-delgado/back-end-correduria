@@ -98,4 +98,11 @@ router.post("/logout", (req, res) => {
   res.json({ message: "Sesión cerrada correctamente." });
 });
 
+// Ruta de prueba directa
+app.get("/api/ping", (req, res) => {
+  console.log("✅ Recibido ping");
+  res.json({ message: "pong" });
+});
+
+
 export default router;
