@@ -6,8 +6,20 @@ const router = express.Router();
 
 const client = new OAuth2Client("945516481273-r5af5fsg05r3f242l92o45c3qge7mg5c.apps.googleusercontent.com");
 
+// ✅ Manejar preflight CORS manualmente para Render
+router.options("/google", (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://correduria-gabn.vercel.app");
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.sendStatus(200);
+});
+
 // LOGIN CON GOOGLE
 router.post("/google", async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://correduria-gabn.vercel.app");
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+
   const { token } = req.body;
 
   try {
@@ -60,7 +72,6 @@ router.put("/update", async (req, res) => {
       return res.status(404).json({ error: "Usuario no encontrado." });
     }
 
-    // Actualizar campos si se reciben
     if (apellidos) user.apellidos = apellidos;
     if (telefono) user.telefono = telefono;
     if (dni) user.dni = dni;
