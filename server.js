@@ -14,6 +14,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5173",
   "https://correduria-gabn.vercel.app",
+  "https://correduria.vercel.app",
 ];
 
 dotenv.config();

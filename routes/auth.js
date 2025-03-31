@@ -98,6 +98,4 @@ router.post("/logout", (req, res) => {
   res.json({ message: "Sesión cerrada correctamente." });
 });
 
-
-
 export default router;
