@@ -7,7 +7,7 @@ import authRoutes from "./routes/auth.js";
 import chatRoutes from './routes/chat.js';
 import Session from "./models/Session.js";
 import historyRoutes from './routes/history.js'; 
-import cors from "cors";
+
 // import { marked } from "marked";
 
 
