@@ -62,6 +62,11 @@ app.use(
 // ✅ Fallback global para OPTIONS que Render ignora a veces
 app.options("*", cors());
 
+app.get("/api/ping", (req, res) => {
+  res.json({ message: "pong" });
+});
+
+
 // ✅ Rutas
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", chatRoutes);
