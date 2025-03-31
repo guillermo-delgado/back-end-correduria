@@ -62,9 +62,7 @@ app.use(
 // ✅ Fallback global para OPTIONS que Render ignora a veces
 app.options("*", cors());
 
-app.get("/api/ping", (req, res) => {
-  res.json({ message: "pong" });
-});
+
 
 
 // ✅ Rutas
@@ -108,4 +106,10 @@ app.get("/api/debug/sessions", async (req, res) => {
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`✅ Servidor backend escuchando en http://localhost:${PORT}`);
+
+  // Ruta de prueba directa
+app.get("/api/ping", (req, res) => {
+  console.log("✅ Recibido ping");
+  res.json({ message: "pong" });
+});
 });
