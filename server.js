@@ -1,51 +1,45 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-// import OpenAI from "openai";
 import mongoose from "mongoose";
 import authRoutes from "./routes/auth.js";
-import chatRoutes from './routes/chat.js';
+import chatRoutes from "./routes/chat.js";
 import Session from "./models/Session.js";
-import historyRoutes from './routes/history.js';
-// import { marked } from "marked";
+import historyRoutes from "./routes/history.js";
 
-// ✅ CORS: Orígenes permitidos
+dotenv.config();
+const app = express();
+
+// ✅ Permitir orígenes específicos
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5173",
   "https://correduria-gabn.vercel.app",
 ];
 
-dotenv.config();
-const app = express();
-
+// ✅ Logs básicos
 app.use(express.json());
 app.use((req, res, next) => {
   console.log(`🛬 [${req.method}] ${req.originalUrl}`);
   next();
 });
 
-
-// ✅ Middleware para preflight OPTIONS + headers básicos CORS
+// ✅ Middleware manual para CORS + preflight
 app.use((req, res, next) => {
-  if (req.method === "OPTIONS") {
-    console.log("⚙️ Preflight OPTIONS recibido en:", req.originalUrl);
-  }
-
   res.setHeader("Access-Control-Allow-Origin", "https://correduria-gabn.vercel.app");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.setHeader("Access-Control-Allow-Credentials", "true");
 
   if (req.method === "OPTIONS") {
+    console.log("⚙️ Preflight OPTIONS recibido en:", req.originalUrl);
     return res.sendStatus(200);
   }
 
   next();
 });
 
-
-// ✅ Solo se mantiene UN cors() real (para la verificación formal)
+// ✅ CORS formal
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -59,26 +53,29 @@ app.use(
     credentials: true,
   })
 );
-// ✅ Fallback global para OPTIONS que Render ignora a veces
+
+// ✅ Fallback global para OPTIONS (por si acaso)
 app.options("*", cors());
 
+// ✅ Ruta de salud/ping
+app.get("/api/ping", (req, res) => {
+  console.log("✅ Recibido ping");
+  res.json({ message: "pong", origin: req.headers.origin || "desconocido" });
+});
 
-
-
-// ✅ Rutas
+// ✅ Rutas reales
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/history", historyRoutes);
 
+// 🔌 Conexión a Mongo
 console.log("🔐 URI MONGO:", process.env.MONGO_URI);
-
-// 🔌 MongoDB
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ Conectado a MongoDB"))
   .catch((err) => console.error("❌ Error conectando a MongoDB", err));
 
-// 🧠 Ruta para historial de sesiones
+// 🧠 Historial individual
 app.get("/api/history/:sessionId", async (req, res) => {
   try {
     const { sessionId } = req.params;
@@ -92,7 +89,7 @@ app.get("/api/history/:sessionId", async (req, res) => {
   }
 });
 
-// 🛠️ Debug sesiones
+// 🛠️ Depurar todas las sesiones
 app.get("/api/debug/sessions", async (req, res) => {
   try {
     const sessions = await Session.find({}, "sessionId messages").lean();
@@ -102,14 +99,8 @@ app.get("/api/debug/sessions", async (req, res) => {
   }
 });
 
-// 🚀 Lanzar servidor
+// 🚀 Servidor
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`✅ Servidor backend escuchando en http://localhost:${PORT}`);
-
-  // Ruta de prueba directa
-app.get("/api/ping", (req, res) => {
-  console.log("✅ Recibido ping");
-  res.json({ message: "pong" });
-});
 });
