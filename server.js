@@ -7,16 +7,28 @@ import authRoutes from "./routes/auth.js";
 import chatRoutes from './routes/chat.js';
 import Session from "./models/Session.js";
 import historyRoutes from './routes/history.js'; 
+import cors from "cors";
 // import { marked } from "marked";
 
 
-
+// ✅ Configura CORS correctamente
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "https://correduria-gabn.vercel.app",
+];
 
 
 dotenv.config(); // 👈 justo después
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true, // si usas cookies o sesiones
+  })
+);
 
 
 // 🆕 rutas
