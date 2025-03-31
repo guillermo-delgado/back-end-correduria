@@ -13,7 +13,7 @@ import historyRoutes from './routes/history.js';
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5173",
-  "https://correduria-gabn.vercel.app",
+  ".app",
   "https://correduria.vercel.app",
 ];
 
@@ -34,7 +34,7 @@ app.use((req, res, next) => {
     console.log("⚙️ Preflight OPTIONS recibido en:", req.originalUrl);
   }
 
-  res.setHeader("Access-Control-Allow-Origin", "https://correduria-gabn.vercel.app");
+  res.setHeader("Access-Control-Allow-Origin", "https://correduria.vercel.app");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.setHeader("Access-Control-Allow-Credentials", "true");

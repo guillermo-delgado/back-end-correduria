@@ -10,7 +10,7 @@ const client = new OAuth2Client("945516481273-r5af5fsg05r3f242l92o45c3qge7mg5c.a
 
 // ✅ Manejo de preflight para toda la ruta /api/auth/*
 router.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://correduria-gabn.vercel.app");
+  res.setHeader("Access-Control-Allow-Origin", "https://correduria.vercel.app");
   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   
@@ -24,7 +24,7 @@ router.use((req, res, next) => {
 
 // LOGIN CON GOOGLE
 router.post("/google", async (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://correduria-gabn.vercel.app");
+  res.setHeader("Access-Control-Allow-Origin", "https://correduria.vercel.app");
   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
 
