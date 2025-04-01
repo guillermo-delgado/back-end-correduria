@@ -28,12 +28,13 @@ app.use((req, res, next) => {
 });
 
 // ✅ Middleware para preflight OPTIONS + headers básicos CORS
-app.use((req, res, next) => {
-  if (req.method === "OPTIONS") {
-    console.log("⚙️ Preflight OPTIONS recibido en:", req.originalUrl);
-  }
 
-  res.setHeader("Access-Control-Allow-Origin", "https://correduria.vercel.app");
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.setHeader("Access-Control-Allow-Credentials", "true");
