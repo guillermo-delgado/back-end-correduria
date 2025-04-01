@@ -13,7 +13,6 @@ import historyRoutes from './routes/history.js';
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5173",
-  ".app",
   "https://correduria.vercel.app",
 ];
 
