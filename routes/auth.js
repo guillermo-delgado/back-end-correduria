@@ -4,30 +4,12 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
-const client = new OAuth2Client("945516481273-r5af5fsg05r3f242l92o45c3qge7mg5c.apps.googleusercontent.com");
+const client = new OAuth2Client(
+  "945516481273-r5af5fsg05r3f242l92o45c3qge7mg5c.apps.googleusercontent.com"
+);
 
-
-
-// ✅ Manejo de preflight para toda la ruta /api/auth/*
-router.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://correduria.vercel.app");
-  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  
-  // Si es preflight, termina aquí
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
-  next();
-});
-
-// LOGIN CON GOOGLE
+// ✅ LOGIN CON GOOGLE
 router.post("/google", async (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://correduria.vercel.app");
-  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-
   const { token } = req.body;
 
   try {
@@ -60,12 +42,12 @@ router.post("/google", async (req, res) => {
 
     res.json({ user });
   } catch (err) {
-    console.error("Error autenticando token de Google:", err);
+    console.error("❌ Error autenticando token de Google:", err);
     res.status(500).json({ error: "Error verificando token" });
   }
 });
 
-// ACTUALIZAR PERFIL DEL USUARIO
+// ✅ ACTUALIZAR PERFIL DEL USUARIO
 router.put("/update", async (req, res) => {
   try {
     const { email, apellidos, telefono, dni, fechaNacimiento } = req.body;
@@ -88,12 +70,12 @@ router.put("/update", async (req, res) => {
     await user.save();
     res.json({ user });
   } catch (err) {
-    console.error("Error al actualizar usuario:", err);
+    console.error("❌ Error al actualizar usuario:", err);
     res.status(500).json({ error: "Error al actualizar usuario" });
   }
 });
 
-// LOGOUT
+// ✅ LOGOUT
 router.post("/logout", (req, res) => {
   res.json({ message: "Sesión cerrada correctamente." });
 });
