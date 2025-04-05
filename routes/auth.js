@@ -75,6 +75,19 @@ router.put("/update", async (req, res) => {
   }
 });
 
+// ✅ CONSULTAR SESIONES POR USUARIO
+router.get("/sessions/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
+    res.json({ sesiones: user.conversaciones });
+  } catch (err) {
+    console.error("❌ Error al recuperar sesiones:", err);
+    res.status(500).json({ error: "Error recuperando sesiones del usuario" });
+  }
+});
+
 // ✅ LOGOUT
 router.post("/logout", (req, res) => {
   res.json({ message: "Sesión cerrada correctamente." });

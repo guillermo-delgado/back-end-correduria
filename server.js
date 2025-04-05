@@ -5,10 +5,17 @@ import authRoutes from "./routes/auth.js";
 import chatRoutes from "./routes/chat.js";
 import Session from "./models/Session.js";
 import historyRoutes from "./routes/history.js";
+import userRoutes from "./routes/user.js";
+import http from 'http';
+import { Server } from 'socket.io';
 
 dotenv.config();
+
 const app = express();
 app.use(express.json());
+
+const server = http.createServer(app); // ✅ Aquí después de app
+const io = new Server(server, { cors: { origin: '*' } });
 
 // ✅ Lista de orígenes permitidos
 const allowedOrigins = [
@@ -45,6 +52,7 @@ app.use((req, res, next) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/history", historyRoutes);
+app.use("/api/user", userRoutes);
 
 // ✅ Ruta de prueba
 app.get("/api/ping", (req, res) => {
@@ -52,7 +60,7 @@ app.get("/api/ping", (req, res) => {
   res.json({ message: "pong" });
 });
 
-// ✅ Ruta directa para historial por sessionId (fallback si no está en el archivo de rutas)
+// ✅ Ruta directa para historial
 app.get("/api/history/:sessionId", async (req, res) => {
   try {
     const { sessionId } = req.params;
@@ -66,7 +74,7 @@ app.get("/api/history/:sessionId", async (req, res) => {
   }
 });
 
-// ✅ Ruta debug de sesiones guardadas
+// ✅ Ruta debug de sesiones
 app.get("/api/debug/sessions", async (req, res) => {
   try {
     const sessions = await Session.find({}, "sessionId messages").lean();
@@ -83,8 +91,21 @@ mongoose
   .then(() => console.log("✅ Conectado a MongoDB"))
   .catch((err) => console.error("❌ Error conectando a MongoDB", err));
 
-// 🚀 Lanzar servidor
+// ✅ WebSockets
+io.on('connection', socket => {
+  console.log('🟢 Cliente conectado');
+
+  socket.on('mensajeEnviado', () => {
+    socket.broadcast.emit('actualizarChats');
+  });
+
+  socket.on('disconnect', () => {
+    console.log('🔴 Cliente desconectado');
+  });
+});
+
+// ✅ Lanzar servidor correctamente
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`✅ Servidor backend escuchando en http://localhost:${PORT}`);
 });

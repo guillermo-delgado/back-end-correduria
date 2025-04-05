@@ -10,6 +10,7 @@ const messageSchema = new mongoose.Schema({
 const sessionSchema = new mongoose.Schema({
   sessionId: { type: String, required: true, unique: true },
   userId: { type: String, required: false }, // Asociar la sesión al usuario de Google
+  name: String, 
   messages: [messageSchema],
 }, { timestamps: true });
 

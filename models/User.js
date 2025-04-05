@@ -11,7 +11,11 @@ const userSchema = new mongoose.Schema({
   dni: { type: String },
   fechaNacimiento: { type: Date },
   avatar: { type: String },
-  conversaciones: { type: Array, default: [] },
+  conversaciones: [{
+    sessionId: { type: String },
+    resumen: { type: String },
+    fecha: { type: Date, default: Date.now }
+  }],
   createdAt: { type: Date, default: Date.now }
 });
 
